@@ -63,10 +63,24 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 4, ../scss/main.scss */
-section {
-  width: 600px;
+/* mixins */
+/* window */
+/* line 7, ../scss/main.scss */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+/* line 12, ../scss/main.scss */
+div {
+  width: 500px;
   height: auto;
   display: block;
   position: absolute;
+  top: 0px;
+  left: 0px;
 }

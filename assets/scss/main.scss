@@ -1,9 +1,15 @@
 @import "compass/reset";
+@import "mixins/mixins.scss";
 
-section
+/* window */
+html,
+body
 {
-	width: 600px;
-	height: auto;
-	display: block;
-	position: absolute;
+	@include initBody();
+}
+
+div
+{
+	@include setWidthHeight(500px, auto);
+	@include absolutePositioning();
 }
