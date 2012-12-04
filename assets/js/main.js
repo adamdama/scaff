@@ -9,11 +9,25 @@
 
 $(document).ready(function()
 {
-	var angle = 45;
-	$('section').each(function()
-	{
-		$(this).css('transform-z', angle);
-		
-		angle *= 2;
-	});
+
 });
+
+var Scaff = function()
+{
+	
+};
+
+Scaff.prototype = 
+{
+	
+};
+
+var Panel = function()
+{
+	
+};
+
+Panel.prototype = 
+{
+	
+};
