@@ -7,3 +7,13 @@
  * @created 04/12/2012
  */
 
+$(document).ready(function()
+{
+	var angle = 45;
+	$('section').each(function()
+	{
+		$(this).css('transform-z', angle);
+		
+		angle *= 2;
+	});
+});
