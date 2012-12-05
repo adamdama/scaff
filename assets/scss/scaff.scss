@@ -1,0 +1,6 @@
+@import "mixins/mixins.scss";
+
+#scaffolding
+{
+	@include setWidthHeight(100%, 100%);
+}

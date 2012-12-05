@@ -59,7 +59,7 @@ Scaff.prototype =
 			left += $this.width();
 			angle += 90
 
-		});
+		}).wrapAll($('<div id="scaffolding" />'));
 	}
 };
 
