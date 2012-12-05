@@ -8,7 +8,7 @@ body
 	@include initBody();
 }
 
-div
+body > div
 {
 	@include setWidthHeight(500px, auto);
 }
