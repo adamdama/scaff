@@ -110,7 +110,9 @@ Scaff.prototype =
 			angle = 0,
 			left = 0,
 			top = 0,
-			numElems= this.elements.length,
+			numElems = this.elements.length,			
+			rotationPerElem = 360 / numElems,
+			xRotation,
 			/**
 			 * Utility function to set next and previous data on each element
 			 * @param {Element} HTML element to set data on
@@ -132,19 +134,23 @@ Scaff.prototype =
 			};
 		
 		// loop over elements and position them
-		$(this.elements).each(function()
+		$(this.elements).each(function(index)
 		{
 			setNextPrev(this);
 			
-			var $this = $(this);
+			var $this = $(this),
+				width = $this.width(),
+				zTranslate = (width/2) / Math.tan(rotationPerElem * Math.PI/180);
 			
+        	xRotation = rotationPerElem * index;
+        	
 			// position each element			
 			$this.css(
 			{
 				'position': 'absolute',
 				//'left': left,
 				//'top': top,
-				'-webkit-transform': 'translateZ('+top+'px)',
+				'-webkit-transform': 'rotateX(' + xRotation + 'deg) translateZ(' + zTranslate + 'px)',
 				'-webkit-perspective': left+'px'
 			});
 		});
