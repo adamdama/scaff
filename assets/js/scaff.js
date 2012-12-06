@@ -45,6 +45,23 @@ Scaff.prototype =
 	 */
 	origData: null,
 	/**
+	 * Configuration data for Scaff
+	 */
+	config:
+	{
+		/**
+		 * The minimum top value at distribution
+		 */
+		minTop: 0,
+		/**
+		 * The maximum top value at distribution
+		 */
+		maxTop: function()
+		{
+			return $(window).height();
+		}
+	},
+	/**
 	 * Initialisation method for Scaff.
 	 * Collects all divs on $root and calls distribute
 	 * @see Scaff.distribute
@@ -113,7 +130,8 @@ Scaff.prototype =
 				if(!first)
 					first = $this;
 			};
-			
+		
+		// loop over elements and position them
 		$(this.elements).each(function()
 		{
 			setNextPrev(this);
