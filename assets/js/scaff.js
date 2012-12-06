@@ -27,7 +27,7 @@ var Scaff = function(selector)
 Scaff.prototype =
 {
 	/**#@+
-	  @memberOf Scaff
+	  @member Scaff
 	*/
 	/**
 	 * The $root element of Scaff stored as a jQuery object
@@ -52,19 +52,27 @@ Scaff.prototype =
 	init: function()
 	{
 		var scaff = this;
-			
-		this.origData = $('div', this.$root);
-
-		// loop over elements positioning them
-		this.origData.each(function(index)
-		{
-			var $this = $(this);
-			
-			$this.addClass('elem ' + $this.index());
-			scaff.elements.push($this);
-
-		}).wrapAll($('<div id="scaffolding" />')).wrapAll('<div class="frame" />');
 		
+		// save the original state of root
+		this.origData = this.$root.html();
+		
+		// create the initial scaffolding and frame
+		var $scaffolding = $('<div id="scaffolding" />').append('<div id="scaff-frame" />');
+		
+		// loop over elements, wrap them and move them into the scaffolding
+		this.$root.children('div').each(function(index)
+		{
+			var $this = $(this),
+				$wrapper = $('<div class="elem">');
+			
+			$wrapper.append($this).appendTo($scaffolding);
+			scaff.elements.push($wrapper);			
+		});
+		
+		// add the scaffolding to the root
+		$scaffolding.prependTo(this.$root)
+		
+		// start the distribution process
 		this.distribute();
 		
 		//fade in scaff
@@ -85,37 +93,32 @@ Scaff.prototype =
 			angle = 0,
 			left = 0,
 			top = 0,
-			axis = ['X','Y','Z'],
-			count = 0,
-			/** 
-			 * @description Utility function for getting the next axis
-			 * @return {string} X, Y or Z */
-			getAxis = function()
+			numElems= this.elements.length,
+			/**
+			 * Utility function to set next and previous data on each element
+			 * @param {Element} HTML element to set data on
+			 */
+			setNextPrev = function(elem)
 			{
-				var a = axis[count];
+				// set data on each element about the next and previous element
+				var $this = $(elem);
 				
-				count++;
-				
-				if(count >= axis.length)
-					count = 0;
+				$this.data('prev', prev);
 					
-				return a;
+				if(prev)
+					prev.data('next', $this);
+				
+				prev = $this;
+				
+				if(!first)
+					first = $this;
 			};
 			
 		$(this.elements).each(function()
 		{
-			// set data on each element about the next and previous element
+			setNextPrev(this);
+			
 			var $this = $(this);
-			
-			$this.data('prev', prev);
-				
-			if(prev)
-				prev.data('next', $this);
-			
-			prev = $this;
-			
-			if(!first)
-				first = $this;
 			
 			// position each element			
 			$this.css(
@@ -125,11 +128,7 @@ Scaff.prototype =
 				//'top': top,
 				'-webkit-transform': 'translateZ('+top+'px)',
 				'-webkit-perspective': left+'px'
-			})
-
-			left += $this.width() / 6;
-			top += 50;
-			angle += 45 + Math.round(Math.random() * 35);
+			});
 		});
 	}
 	/**#@-*/
@@ -161,3 +160,33 @@ Scaff.prototype =
 // */
 // element: null
 // };
+
+/**
+ * Required jQuery plugins
+ * 
+ * @param {Object} jQuery a reference to the jQuery library
+ */
+(function(jQuery)
+{
+	/**
+	 * InserAt jQuery plugin for inserting an element at a particular index
+	 * 
+	 * @param {Object} index index to insert at
+	 * @param {Object} element element to insert
+	 * @member jQuery
+	 */
+	jQuery.fn.insertAt = function(index, element)
+	{
+		var lastIndex = this.children().size();
+		
+		if (index < 0)
+			index = Math.max(0, lastIndex + 1 + index);
+			
+		this.append(element);
+		
+		if (index < lastIndex)
+			this.children().eq(index).before(this.children().last());
+			
+		return this;
+	};
+})($); 

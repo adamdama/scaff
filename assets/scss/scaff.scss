@@ -4,9 +4,9 @@
 {
 	@include setWidthHeight(100%, 100%);
 	-webkit-transform-style: preserve-3d;
+}
 	
-	.frame
-	{
-		@include absolutePositioning('top','left');
-	}
+#scaff-frame
+{
+	@include absolutePositioning('top','left');
 }
