@@ -3,4 +3,9 @@
 #scaffolding
 {
 	@include setWidthHeight(100%, 100%);
+	
+	.frame
+	{
+		@include absolutePositioning('top','left');
+	}
 }

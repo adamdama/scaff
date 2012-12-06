@@ -8,7 +8,13 @@ body
 	@include initBody();
 }
 
-body > div
+body
+{
+	display: none;
+}
+
+.elem
 {
 	@include setWidthHeight(500px, auto);
 }
+
