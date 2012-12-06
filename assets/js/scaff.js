@@ -40,6 +40,11 @@ Scaff.prototype =
 	 */
 	elements: null,
 	/**
+	 * Original HTML markup before Scaff modifications
+	 * @type jQuery
+	 */
+	origData: null,
+	/**
 	 * Initialisation method for Scaff.
 	 * Collects all divs on $root and calls distribute
 	 * @see Scaff.distribute
@@ -47,9 +52,11 @@ Scaff.prototype =
 	init: function()
 	{
 		var scaff = this;
+			
+		this.origData = $('div', this.$root);
 
 		// loop over elements positioning them
-		$('div', this.$root).each(function(index)
+		this.origData.each(function(index)
 		{
 			var $this = $(this);
 			
@@ -76,7 +83,8 @@ Scaff.prototype =
 		var prev,
 			first,
 			angle = 0,
-			left = 0
+			left = 0,
+			top = 0,
 			axis = ['X','Y','Z'],
 			count = 0,
 			/** 
@@ -113,12 +121,14 @@ Scaff.prototype =
 			$this.css(
 			{
 				'position': 'absolute',
-				'left': left,
-				'-webkit-transform': 'rotate'+getAxis()+'('+angle+'deg) translate'+getAxis()+'(100px)',
+				//'left': left,
+				//'top': top,
+				'-webkit-transform': 'translateZ('+top+'px)',
 				'-webkit-perspective': left+'px'
 			})
 
-			left += $this.width();
+			left += $this.width() / 6;
+			top += 50;
 			angle += 45 + Math.round(Math.random() * 35);
 		});
 	}
