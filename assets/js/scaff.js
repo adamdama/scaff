@@ -50,6 +50,33 @@ Scaff.prototype =
 	config:
 	{
 		/**
+		 * Reference to the Scaff object
+		 * @type Scaff
+		 */
+		scaff: null,
+		/**
+		 * Method to retrieve a config property
+		 * @param {string} prop The property to recieve
+		 * @return {*} The value of the property
+		 */
+		get: function(prop)
+		{
+			var val = prop ? this[prop] : null;
+			return $.isFunction(val) ? this[prop]() : this[prop];
+		},
+		/**
+		 * Method to set config properties
+		 * @param {string} prop The name of the property to check
+		 * @param {*} val the value to set the property to
+		 */
+		set: function(prop, val)
+		{
+			console.log(prop);
+			if(prop)
+				this[prop] = val;
+			console.log(this);
+		},
+		/**
 		 * The minimum top value at distribution
 		 */
 		minTop: 0,
@@ -58,7 +85,7 @@ Scaff.prototype =
 		 */
 		maxTop: function()
 		{
-			return this.$root ? $(this.$root).height() : 0;
+			return this.scaff.$root ? $(this.scaff.$root).height() : 0;
 		},
 		/**
 		 * The minimum top value at distribution
@@ -67,9 +94,10 @@ Scaff.prototype =
 		/**
 		 * The maximum top value at distribution
 		 */
-		maxTop: function()
+		maxLeft: function()
 		{
-			return this.$root ? $(this.$root).width() : 0;
+			console.log(this);
+			return this.scaff.$root ? $(this.scaff.$root).width() : 0;
 		}
 	},
 	/**
@@ -79,7 +107,8 @@ Scaff.prototype =
 	 */
 	init: function()
 	{
-		var scaff = this;
+		var scaff = this
+			this.config.set('scaff', this);
 		
 		// save the original state of root
 		this.origData = this.$root.html();
@@ -116,14 +145,13 @@ Scaff.prototype =
 		if(this.elements.length === 0)
 			return;
 			
-		var prev,
+		var scaff = this,
+			scaffWidth = this.getScaffWidth(false),
+			scaffHeight = this.getScaffHeight(false),
+			prev,
 			first,
-			angle = 0,
-			left = 0,
-			top = 0,
 			numElems = this.elements.length,			
 			rotationPerElem = 360 / numElems,
-			xRotation,
 			/**
 			 * Utility function to set next and previous data on each element
 			 * @param {Element} HTML element to set data on
@@ -147,21 +175,27 @@ Scaff.prototype =
 		// loop over elements and position them
 		$(this.elements).each(function(index)
 		{
+			// set next and prev data
 			setNextPrev(this);
 			
+			// calculate some positional varibales
 			var $this = $(this),
 				width = $this.width(),
-				zTranslate = (width / 2) / Math.tan(rotationPerElem * Math.PI / 180);
-			
-        	xRotation = rotationPerElem * index;
+				height = $this.height(),
+				centerLeft = (scaffWidth - width) / 2,
+				xRotation = rotationPerElem * index - 180,
+				zTranslate = (width / 2) / Math.tan(rotationPerElem * Math.PI / 180),
+	        	left = centerLeft - (Math.sin(xRotation * Math.PI / 180) * centerLeft),
+	        	top = (Math.sin(xRotation * Math.PI / 180) * scaffHeight);
         	
+        		
 			// position each element			
 			$this.css(
 			{
 				'position': 'absolute',
 				'left': left,
 				//'top': top,
-				'-webkit-transform': 'rotateX(' + xRotation + 'deg) translateZ(' + zTranslate + 'px)'
+				//'-webkit-transform': 'translateZ(' + zTranslate + 'px)'
 			});
 		});
 	},
@@ -172,7 +206,8 @@ Scaff.prototype =
 	 */
 	getScaffWidth: function(actual)
 	{
-		return actual ? $root.width() : this.config.maxLeft - this.config.minLeft;
+		console.log(this.config.get('maxLeft'));
+		return actual ? this.$root.width() : this.config.get('maxLeft') - this.config.get('minLeft');
 	},
 	/**
 	 * Get the width of the scaffolding
@@ -181,7 +216,7 @@ Scaff.prototype =
 	 */
 	getScaffHeight: function(actual)
 	{
-		return actual ? $root.height() : this.config.maxTop - this.config.minTop;
+		return actual ? this.$root.height() : this.config.get('maxTop') - this.config.get('minTop');
 	}
 	/**#@-*/
 };
