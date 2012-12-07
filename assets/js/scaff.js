@@ -114,7 +114,8 @@ Scaff.prototype =
 		this.origData = this.$root.html();
 		
 		// create the initial scaffolding and frame
-		var $scaffolding = $('<div id="scaffolding" />').append('<div id="scaff-frame" />');
+		var $scaffFrame = $('<div id="scaff-frame" />'),
+			$scaffolding = $('<div id="scaffolding" />').append($scaffFrame);
 		
 		// loop over elements, wrap them and move them into the scaffolding
 		this.$root.children('div').each(function(index)
@@ -122,7 +123,7 @@ Scaff.prototype =
 			var $this = $(this),
 				$wrapper = $('<div class="elem">');
 			
-			$wrapper.append($this).appendTo($scaffolding);
+			$wrapper.append($this).appendTo($scaffFrame);
 			scaff.elements.push($wrapper);			
 		});
 		
@@ -183,9 +184,10 @@ Scaff.prototype =
 				width = $this.width(),
 				height = $this.height(),
 				centerLeft = (scaffWidth - width) / 2,
-				xRotation = rotationPerElem * index - 180,
-				zTranslate = (width / 2) / Math.tan(rotationPerElem * Math.PI / 180),
-	        	left = centerLeft - (Math.sin(xRotation * Math.PI / 180) * centerLeft),
+				xRotation = rotationPerElem * index,
+				zTranslate = 0,
+				scale = 1,
+	        	left = centerLeft - (Math.sin((xRotation  - 180) * Math.PI / 180) * centerLeft),
 	        	top = (Math.sin(xRotation * Math.PI / 180) * scaffHeight);
         	
         		
@@ -193,9 +195,10 @@ Scaff.prototype =
 			$this.css(
 			{
 				'position': 'absolute',
-				'left': left,
+				//'left': left,
 				//'top': top,
-				//'-webkit-transform': 'translateZ(' + zTranslate + 'px)'
+				'-webkit-transform-origin': '50% 50%',
+				'-webkit-transform': 'rotateY(' + xRotation + 'deg) translate3d('+left+'px,0,0) scale3d('+scale+','+scale+','+scale+')'
 			});
 		});
 	},
