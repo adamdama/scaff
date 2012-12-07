@@ -104,7 +104,12 @@ Scaff.prototype =
 		 * Maxiumum depth for elements
 		 * @type number
 		 */
-		maxZ: -200
+		maxZ: -200,
+		/**
+		 * Maxiumum depth for elements
+		 * @type number
+		 */
+		minScale: 0.1
 	},
 	/**
 	 * Initialisation method for Scaff.
@@ -191,8 +196,9 @@ Scaff.prototype =
 				height = $this.height(),
 				centerLeft = (scaffWidth - width) / 2,
 				xRotation = rotationPerElem * index,
+				minScale = scaff.config.get('minScale'),
 				zTranslate = Math.sin(xRotation * Math.PI / 360) * scaff.config.get('maxZ'),
-				scale = 1,
+				scale = 1 - Math.sin(xRotation * Math.PI / 360) * (1 - minScale),
 	        	left = centerLeft - (Math.sin((xRotation  - 180) * Math.PI / 180) * centerLeft),
 	        	top = (Math.sin(xRotation * Math.PI / 180) * scaffHeight);
         		

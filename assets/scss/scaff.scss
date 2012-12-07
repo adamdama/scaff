@@ -10,7 +10,7 @@
 #scaff-frame
 {
 	@include absolutePositioning('top','left');
-	-webkit-perspective: 200px;
+	-webkit-perspective: 0px;
 	-webkit-perspective-origin: 50% 50%;
 	-webkit-transform-style: preserve-3d;
 	
