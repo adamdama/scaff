@@ -71,34 +71,40 @@ Scaff.prototype =
 		 */
 		set: function(prop, val)
 		{
-			console.log(prop);
 			if(prop)
 				this[prop] = val;
-			console.log(this);
 		},
 		/**
 		 * The minimum top value at distribution
+		 * Can be function or number.
 		 */
 		minTop: 0,
 		/**
 		 * The maximum top value at distribution
+		 * Can be function or number.
 		 */
 		maxTop: function()
 		{
 			return this.scaff.$root ? $(this.scaff.$root).height() : 0;
 		},
 		/**
-		 * The minimum top value at distribution
+		 * The minimum top value at distribution.
+		 * Can be function or number.
 		 */
 		minLeft: 0,
 		/**
-		 * The maximum top value at distribution
+		 * The maximum top value at distribution.
+		 * Can be function or number.
 		 */
 		maxLeft: function()
 		{
-			console.log(this);
 			return this.scaff.$root ? $(this.scaff.$root).width() : 0;
-		}
+		},
+		/**
+		 * Maxiumum depth for elements
+		 * @type number
+		 */
+		maxZ: -200
 	},
 	/**
 	 * Initialisation method for Scaff.
@@ -185,20 +191,19 @@ Scaff.prototype =
 				height = $this.height(),
 				centerLeft = (scaffWidth - width) / 2,
 				xRotation = rotationPerElem * index,
-				zTranslate = 0,
+				zTranslate = Math.sin(xRotation * Math.PI / 360) * scaff.config.get('maxZ'),
 				scale = 1,
 	        	left = centerLeft - (Math.sin((xRotation  - 180) * Math.PI / 180) * centerLeft),
 	        	top = (Math.sin(xRotation * Math.PI / 180) * scaffHeight);
-        	
         		
 			// position each element			
 			$this.css(
 			{
 				'position': 'absolute',
-				//'left': left,
+				'left': left,
 				//'top': top,
 				'-webkit-transform-origin': '50% 50%',
-				'-webkit-transform': 'rotateY(' + xRotation + 'deg) translate3d('+left+'px,0,0) scale3d('+scale+','+scale+','+scale+')'
+				'-webkit-transform': 'rotateY(0deg) translateZ(' + zTranslate + 'px) scale3d('+scale+','+scale+','+scale+')'
 			});
 		});
 	},
@@ -209,7 +214,6 @@ Scaff.prototype =
 	 */
 	getScaffWidth: function(actual)
 	{
-		console.log(this.config.get('maxLeft'));
 		return actual ? this.$root.width() : this.config.get('maxLeft') - this.config.get('minLeft');
 	},
 	/**
