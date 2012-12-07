@@ -58,7 +58,18 @@ Scaff.prototype =
 		 */
 		maxTop: function()
 		{
-			return $(window).height();
+			return this.$root ? $(this.$root).height() : 0;
+		},
+		/**
+		 * The minimum top value at distribution
+		 */
+		minLeft: 0,
+		/**
+		 * The maximum top value at distribution
+		 */
+		maxTop: function()
+		{
+			return this.$root ? $(this.$root).width() : 0;
 		}
 	},
 	/**
@@ -140,7 +151,7 @@ Scaff.prototype =
 			
 			var $this = $(this),
 				width = $this.width(),
-				zTranslate = (width/2) / Math.tan(rotationPerElem * Math.PI/180);
+				zTranslate = (width / 2) / Math.tan(rotationPerElem * Math.PI / 180);
 			
         	xRotation = rotationPerElem * index;
         	
@@ -148,12 +159,29 @@ Scaff.prototype =
 			$this.css(
 			{
 				'position': 'absolute',
-				//'left': left,
+				'left': left,
 				//'top': top,
-				'-webkit-transform': 'rotateX(' + xRotation + 'deg) translateZ(' + zTranslate + 'px)',
-				'-webkit-perspective': left+'px'
+				'-webkit-transform': 'rotateX(' + xRotation + 'deg) translateZ(' + zTranslate + 'px)'
 			});
 		});
+	},
+	/**
+	 * Get the height of the scaffolding
+	 * @param {Boolean} actual True returns the width of root element; False returns the space available for distribution.
+	 * @return {number} The width of the element
+	 */
+	getScaffWidth: function(actual)
+	{
+		return actual ? $root.width() : this.config.maxLeft - this.config.minLeft;
+	},
+	/**
+	 * Get the width of the scaffolding
+	 * @param {Boolean} actual True returns the height of root element; False returns the space available for distribution.
+	 * @return {number} The height of the element
+	 */
+	getScaffHeight: function(actual)
+	{
+		return actual ? $root.height() : this.config.maxTop - this.config.minTop;
 	}
 	/**#@-*/
 };
