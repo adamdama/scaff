@@ -184,6 +184,9 @@ Scaff.prototype =
 					first = $this;
 			};
 		
+		// show the root so that elements can be measured
+		scaff.$root.show();
+		
 		// loop over elements and position them
 		$(this.elements).each(function(index)
 		{
@@ -195,23 +198,30 @@ Scaff.prototype =
 				width = $this.width(),
 				height = $this.height(),
 				centerLeft = (scaffWidth - width) / 2,
+				centerTop = (scaffHeight - height) / 2,
 				xRotation = rotationPerElem * index,
 				minScale = scaff.config.get('minScale'),
 				zTranslate = Math.sin(xRotation * Math.PI / 360) * scaff.config.get('maxZ'),
+				zindex = Math.sin(xRotation * Math.PI / 360) * scaff.elements.length,
 				scale = 1 - Math.sin(xRotation * Math.PI / 360) * (1 - minScale),
 	        	left = centerLeft - (Math.sin((xRotation  - 180) * Math.PI / 180) * centerLeft),
-	        	top = (Math.sin(xRotation * Math.PI / 180) * scaffHeight);
-        		
+	        	top = centerTop - (Math.sin(xRotation * Math.PI / 360) * centerTop);
+	        	
 			// position each element			
 			$this.css(
 			{
 				'position': 'absolute',
 				'left': left,
-				//'top': top,
+				'top': top,
+				'z-index': zindex,
+				'-webkit-backface-visibility': 'visible',
 				'-webkit-transform-origin': '50% 50%',
 				'-webkit-transform': 'rotateY(0deg) translateZ(' + zTranslate + 'px) scale3d('+scale+','+scale+','+scale+')'
 			});
 		});
+		
+		// hide the root again
+    	scaff.$root.hide();
 	},
 	/**
 	 * Get the height of the scaffolding
